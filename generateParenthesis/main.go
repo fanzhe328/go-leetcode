@@ -7,20 +7,19 @@ func main() {
 }
 
 func generateParenthesis(n int) []string {
-	result := []string{}
-	_generate(0, 0, n, "", &result)
-	return result
+	res := []string{}
+	dfs(n, n, "", &res)
+	return res
 }
 
-func _generate(left, right, n int, s string, result *[]string) {
-	if left == n && right == n {
-		*result = append(*result, s)
+func dfs(l, r int, s string, res *[]string) {
+	if l == 0 && r == 0 {
+		*res = append(*res, s)
 	}
-
-	if left < n {
-		_generate(left+1, right, n, s+"(", result)
+	if l > 0 {
+		dfs(l-1, r, s+"(", res)
 	}
-	if right < left {
-		_generate(left, right+1, n, s+")", result)
+	if l < r {
+		dfs(l, r-1, s+")", res)
 	}
 }

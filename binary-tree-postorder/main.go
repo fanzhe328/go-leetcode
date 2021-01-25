@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"container/list"
+	"fmt"
 )
 
 type TreeNode struct {
@@ -37,28 +36,35 @@ func main() {
 			Val: 3,
 		},
 	}
-	fmt.Println(preorderTraversal(t))
+	fmt.Println(postorderTraversal(t))
 }
 
-func preorderTraversal(root *TreeNode) []int {
-	if root == nil {
-		return []int{}
+func postorderTraversal(root *TreeNode) []int {
+	type Item struct {
+		Flag int
+		Node *TreeNode
 	}
+
 	res := []int{}
 	stack := list.New()
-
-	stack.PushBack(root)
+	cur := root
+	stack.PushBack(Item{0, cur})
 	for stack.Len() != 0 {
-		item := stack.Back()
-		cur := item.Value.(*TreeNode)
-		res = append(res, cur.Val)
-		stack.Remove(item)
-		if cur.Right != nil {
-			stack.PushBack(cur.Right)
+		tmp := stack.Back()
+		item := tmp.Value.(Item)
+		if item.Node == nil {
+			stack.Remove(tmp)
+			continue
 		}
-		if cur.Left != nil {
-			stack.PushBack(cur.Left)
+		if item.Flag == 0 {
+			stack.Remove(tmp)
+			stack.PushBack(Item{1, item.Node})
+			stack.PushBack(Item{0, item.Node.Right})
+			stack.PushBack(Item{0, item.Node.Left})
+			continue
 		}
+		stack.Remove(tmp)
+		res = append(res, item.Node.Val)
 	}
 	return res
 }
