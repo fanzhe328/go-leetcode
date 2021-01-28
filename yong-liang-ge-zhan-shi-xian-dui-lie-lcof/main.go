@@ -1,13 +1,27 @@
 package main
 
 import (
-	"container/list"
 	"fmt"
 )
 
+type Stack []int
+
+func (s *Stack) Len() int {
+	return len(*s)
+}
+
+func (s *Stack) Push(v int) {
+	*s = append(*s, v)
+}
+
+func (s *Stack) Pop() (v int) {
+	*s, v = (*s)[:len(*s)-1], (*s)[len(*s)-1]
+	return
+}
+
 type CQueue struct {
-	In  *list.List
-	Out *list.List
+	in  *Stack
+	out *Stack
 }
 
 func main() {
@@ -25,31 +39,25 @@ func main() {
 
 func Constructor() CQueue {
 	return CQueue{
-		In:  list.New(),
-		Out: list.New(),
+		in:  new(Stack),
+		out: new(Stack),
 	}
 }
 
 func (this *CQueue) AppendTail(value int) {
-	this.In.PushBack(value)
+	this.in.Push(value)
 }
 
 func (this *CQueue) DeleteHead() int {
-	tmp := this.Out.Back()
-	if tmp == nil {
-		for {
-			item := this.In.Back()
-			if item == nil {
-				break
-			}
-			this.Out.PushBack(item.Value.(int))
-			this.In.Remove(item)
+	if this.out.Len() == 0 {
+		for this.in.Len() != 0 {
+			item := this.in.Pop()
+			this.out.Push(item)
 		}
 	}
-	tmp = this.Out.Back()
-	if tmp == nil {
+	if this.out.Len() == 0 {
 		return -1
 	}
-	this.Out.Remove(tmp)
-	return tmp.Value.(int)
+	item := this.out.Pop()
+	return item
 }
