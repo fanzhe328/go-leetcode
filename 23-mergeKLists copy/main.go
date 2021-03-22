@@ -10,11 +10,11 @@ type ListNode struct {
 	Next *ListNode
 }
 
-type MinHeap []*ListNode
-
 func main() {
 	fmt.Println()
 }
+
+type MinHeap []*ListNode
 
 func mergeKLists(lists []*ListNode) *ListNode {
 	if len(lists) == 0 {
@@ -23,12 +23,12 @@ func mergeKLists(lists []*ListNode) *ListNode {
 	h := &MinHeap{}
 	*h = make(MinHeap, 0, len(lists))
 	heap.Init(h)
-	for i, item := range lists {
+	for _, item := range lists {
 		if item == nil {
 			continue
 		}
 		heap.Push(h, item)
-		lists[i] = item.Next
+		// lists[i] = item.Next
 	}
 	if h.Len() == 0 {
 		return nil
